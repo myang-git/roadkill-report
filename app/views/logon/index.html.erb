@@ -1,6 +1,22 @@
 
 <script>
 
+window.fbAsyncInit = function() {
+    FB.init({
+      appId      : '637226206345907',
+      xfbml      : true,
+      version    : 'v2.3'
+    });
+};
+
+(function(d, s, id){
+ var js, fjs = d.getElementsByTagName(s)[0];
+ if (d.getElementById(id)) {return;}
+ js = d.createElement(s); js.id = id;
+ js.src = "//connect.facebook.net/en_US/sdk.js";
+ fjs.parentNode.insertBefore(js, fjs);
+}(document, 'script', 'facebook-jssdk'));
+
 var WHEIGHT = $(window).height();
 var WWIDTH = $(window).width();
 
@@ -15,5 +31,5 @@ $(document).on("pageshow", init);
 
 <div id="centerContainer" style="position: absolute; text-align:center; width: 100%; margin: 0 auto 0 auto;">
 	<h1>路殺紀錄</h1>
-	<a id="btnSignInFacebook" href="/auth/facebook" class="ui-btn ui-btn-inline ui-corner-all" style="margin: 0; background-color: #3f589a; color: #ffffff;"><%= image_tag "fblogo-white.png", :style => "vertical-align:middle;"%><span style="padding-left: 15px">Log in with Facebook</span></a>
+	<fb:login-button size="xlarge" scope="public_profile,email" onlogin="checkLoginState();"></fb:login-button>
 </div>

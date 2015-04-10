@@ -1,0 +1,19 @@
+
+<script>
+
+var WHEIGHT = $(window).height();
+var WWIDTH = $(window).width();
+
+function init(event, ui) {
+  $("#centerContainer").center();
+}
+
+$(document).on("pageshow", init);
+
+
+</script>
+
+<div id="centerContainer" style="position: absolute; text-align:center; width: 100%; margin: 0 auto 0 auto;">
+	<h1>路殺紀錄</h1>
+	<a id="btnSignInFacebook" href="/auth/facebook" class="ui-btn ui-btn-inline ui-corner-all" style="margin: 0; background-color: #3f589a; color: #ffffff;"><%= image_tag "fblogo-white.png", :style => "vertical-align:middle;"%><span style="padding-left: 15px">Log in with Facebook</span></a>
+</div>

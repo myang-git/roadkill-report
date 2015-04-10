@@ -1,0 +1,79 @@
+<div id="home" data-role="page">
+	<div data-role="main" class="ui-content" data-theme="a" style="margin-top: 5px;">
+		<ul data-role="listview" data-split-theme="a" data-inset="true" class="no-shadow">
+			<li id="eventRow" data-icon="edit">
+				<a href="#" data-rel="popup" data-position-to="window" data-transition="fade" class="no-border">
+					<%= image_tag "camera.png", :id => "photo", :class => "minor-padding vcenter photo", :alt => "照片" %>
+					<textarea id="photoDesc" class="simple-border photoDesc" placeholder="照片說明"></textarea>
+					<div><p class="location pastel-green-font"></p></div>
+				</a>
+				<a id="btnEdit" href="#" class="btnEdit no-border" data-rel="popup" data-position-to="window" data-transition="pop">編輯</a>
+				<div style="width: 0; height: 0; overflow: hidden;">
+					<input id="photoPicker" class="photoPicker" type="file" accept="image/*">
+				</div>
+			</li>
+			<li id="eventRow" data-icon="edit">
+				<a href="#" data-rel="popup" data-position-to="window" data-transition="fade" class="no-border">
+					<%= image_tag "camera.png", :id => "photo", :class => "minor-padding vcenter photo", :alt => "照片" %>
+					<textarea id="photoDesc" class="simple-border photoDesc" placeholder="照片說明"></textarea>
+					<div><p class="location pastel-green-font"></p></div>
+				</a>
+				<a id="btnEdit" href="#" class="btnEdit no-border" data-rel="popup" data-position-to="window" data-transition="pop">編輯</a>
+				<div style="width: 0; height: 0; overflow: hidden;">
+					<input id="photoPicker" class="photoPicker" type="file" accept="image/*">
+				</div>
+			</li>
+			<li id="eventRow" data-icon="edit">
+				<a href="#" data-rel="popup" data-position-to="window" data-transition="fade" class="no-border">
+					<%= image_tag "camera.png", :id => "photo", :class => "minor-padding vcenter photo", :alt => "照片" %>
+					<textarea id="photoDesc" class="simple-border photoDesc" placeholder="照片說明"></textarea>
+					<div><p class="location pastel-green-font"></p></div>
+				</a>
+				<a id="btnEdit" href="#" class="btnEdit no-border" data-rel="popup" data-position-to="window" data-transition="pop">編輯</a>
+				<div style="width: 0; height: 0; overflow: hidden;">
+					<input id="photoPicker" class="photoPicker" type="file" accept="image/*">
+				</div>
+			</li>
+		</ul>	
+		<div id="bottomContainer">
+			<a id="btnTopReporters" href="/stats" class="ui-btn ui-btn-a ui-corner-all rounded-corner pastel-pink">即時統計</a>
+			<a id="btnLogout" href="/signout" class="ui-btn ui-btn-a ui-corner-all rounded-corner pastel-pink">登出</a>
+			<p class="text-center small-font">v20141026.2</p>
+		</div>
+	</div>
+	
+	<div id="homeToolbar" data-role="footer" data-position="fixed" data-tap-toggle="false" style="padding: 5px 0 5px 0">
+		<div class="text-center">
+			<a id="btnUpload" href="#" class="ui-btn ui-btn-a ui-btn-inline ui-corner-all rounded-corner pastel-green white-font large-font" style="padding: 20px 50px 20px 50px; margin-right: auto; margin-left: auto;">上傳</a>
+		</div>
+	</div>
+	
+	<!-- popups -->
+	
+	<div id="editPopup" data-role="popup" data-theme="a" data-overlay-theme="b" class="ui-content" style="max-width:340px; padding: 35px;">
+		<p style="text-align: center" >對這個事件，你要...</p>
+			<ul data-role="listview" data-inset="true">
+				<li><a id="btnRetakePhoto" href="#">重拍一張照片</a></li>
+				<li><a id="btnUpdateLocation" href="#">標記日期與地點</a></li>
+			</ul>
+	</div>
+	
+</div>
+
+<div id="map" data-role="page">
+	<div data-role="main" class="ui-content" data-theme="a" style="padding:0;">
+		<div id="gmapCanvas" style="width:100%;"></div>
+	</div>
+	<div id="mapToolbar" data-role="footer" data-position="fixed" data-tap-toggle="false" style="padding: 5px 0 5px 0">
+		<div><p id="selectedMapLocation" class="text-center"></p></div>
+		<div><p id="selectedDate" class="text-center"></p></div>
+		<div style="display: none;">
+			<input id="datePicker" type="date" data-role="datebox" data-options='{"mode": "calbox", "overrideDateFormat": "%Y/%m/%d", "beforeToday": true}'>
+		</div>
+		<div class="text-center" data-role="controlgroup" data-type="horizontal" style="padding: 10px 0 10px 0;">
+			<a id="btnConfirmLocation" href="#" class="ui-btn ui-corner-all ui-btn-icon-bottom ui-icon-check horizontal-controlgroup-large">確定</a>
+			<a id="btnPickDateTime" href="#" class="ui-btn ui-corner-all ui-btn-icon-bottom ui-icon-calendar horizontal-controlgroup-large">日期</a>
+			<a id="btnCancelMapView" href="#" class="ui-btn ui-corner-all ui-btn-icon-bottom ui-icon-delete horizontal-controlgroup-large">取消</a>
+		</div>
+	</div>
+</div>

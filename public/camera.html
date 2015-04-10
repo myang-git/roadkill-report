@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<head>
+    <title>HTML5 Camera Fun</title>
+    <script src="http://code.jquery.com/jquery-1.7.2.min.js"></script>
+    <script src="http://www.nihilogic.dk/labs/exif/exif.js" type="text/javascript"></script>
+    <script src="http://www.nihilogic.dk/labs/binaryajax/binaryajax.js" type="text/javascript"></script>
+    <script type="text/javascript">
+// Wrapper around MPL-licensed http://www.nihilogic.dk/labs/binaryajax/binaryajax.js
+// to support JavaScript typed arrays since binary strings are not supported in IE 10
+var createBinaryFile = function(uintArray) {
+    var data = new Uint8Array(uintArray);
+    var file = new BinaryFile(data);
+
+    file.getByteAt = function(iOffset) {
+        return data[iOffset];
+    };
+
+    file.getBytesAt = function(iOffset, iLength) {
+        var aBytes = [];
+        for (var i = 0; i < iLength; i++) {
+            aBytes[i] = data[iOffset  + i];
+        }
+        return aBytes;
+    };
+
+    file.getLength = function() {
+        return data.length;
+    };
+
+    return file;
+};
+
+// The actual page logic
+(function() {
+    $(document).on('ready', function() {
+        $('#PhotoButton').click(function() {
+            $('#PhotoPicker').trigger('click');
+            return false;
+        });
+        $('#PhotoPicker').on('change', function(e) {
+            e.preventDefault();
+            if(this.files.length === 0) return;
+            var imageFile = this.files[0];
+            var img = new Image();
+            var url = window.URL ? window.URL : window.webkitURL;
+            img.src = url.createObjectURL(imageFile);
+            img.onload = function(e) {
+                url.revokeObjectURL(this.src);
+
+                var width;
+                var height;
+                var binaryReader = new FileReader();
+                binaryReader.onloadend=function(d) {
+                    var exif, transform = "none";
+                    exif=EXIF.readFromBinaryFile(createBinaryFile(d.target.result));
+
+                    if(exif.Orientation === 8) {
+                        width = img.height;
+                        height = img.width;
+                        transform = "left";
+                    } else if(exif.Orientation === 6) {
+                        width = img.height;
+                        height = img.width;
+                        transform = "right";
+                    } else if(exif.Orientation === 1) {
+                        width = img.width;
+                        height = img.height;
+                    } else if(exif.Orientation === 3) {
+                        width = img.width;
+                        height = img.height;
+                        transform = "flip";
+                    } else {
+                        width = img.width;
+                        height = img.height;
+                    }
+                    var MAX_WIDTH = 700;
+                    var MAX_HEIGHT = 600;
+                    if (width/MAX_WIDTH > height/MAX_HEIGHT) {
+                        if (width > MAX_WIDTH) {
+                            height *= MAX_WIDTH / width;
+                            width = MAX_WIDTH;
+                        }
+                    } else {
+                        if (height > MAX_HEIGHT) {
+                            width *= MAX_HEIGHT / height;
+                            height = MAX_HEIGHT;
+                        }
+                    }
+                    var canvas = $('#PhotoEdit')[0];
+                    canvas.width = width;
+                    canvas.height = height;
+                    var ctx = canvas.getContext("2d");
+                    ctx.fillStyle = 'white';
+                    ctx.fillRect(0, 0, canvas.width, canvas.height);
+                    if(transform === 'left') {
+                        ctx.setTransform(0, -1, 1, 0, 0, height);
+                        ctx.drawImage(img, 0, 0, height, width);
+                    } else if(transform === 'right') {
+                        ctx.setTransform(0, 1, -1, 0, width, 0);
+                        ctx.drawImage(img, 0, 0, height, width);
+                    } else if(transform === 'flip') {
+                        ctx.setTransform(1, 0, 0, -1, 0, height);
+                        ctx.drawImage(img, 0, 0, width, height);
+                    } else {
+                        ctx.setTransform(1, 0, 0, 1, 0, 0);
+                        ctx.drawImage(img, 0, 0, width, height);
+                    }
+                    ctx.setTransform(1, 0, 0, 1, 0, 0);
+                };
+
+                binaryReader.readAsArrayBuffer(imageFile);
+            };
+        });
+        $('#ProcessButton').click(function() {
+            var canvas = $('#PhotoEdit')[0];
+            var ctx = canvas.getContext("2d");
+            var pixels = ctx.getImageData(0, 0, canvas.width, canvas.height);
+            var r, g, b, i;
+            for (var py = 0; py < pixels.height; py += 1) {
+                for (var px = 0; px < pixels.width; px += 1) {
+                    i = (py*pixels.width + px)*4;
+                    r = pixels.data[i];
+                    g = pixels.data[i+1];
+                    b = pixels.data[i+2];
+                    if(g > 100 && g > r*1.35 && g > b*1.6) pixels.data[i+3] = 0;
+                }
+            }
+            ctx.putImageData(pixels, 0, 0);
+            var data = canvas.toDataURL('image/png');
+            setTimeout(function() {alert("Modified Image Data: "+data.substring(0, 30)+"...");}, 100);
+            // Do something with the image file now...
+            return false;
+        });
+    });
+})();
+    </script>
+</head>
+<body>
+<div style="position: absolute; left: 0; top: 0; width: 300px;">
+    <br />
+    <br />
+    <div style="width: 0; height: 0; overflow: hidden;">
+        <input type="file" id="PhotoPicker"
+               accept="image/*" capture="camera">
+    </div>
+    <div>
+        <button id="PhotoButton">1. Select Photo</button>
+    </div>
+    <br />
+    <br />
+    <div>
+        <button id="ProcessButton">2. Process Photo</button>
+    </div>
+</div>
+<canvas width="700" height="600" id="PhotoEdit" style="position: absolute; top: 0; left: 300px;">
+    <p><font color="white">This browser does not support the required features.
+        Please try
+        <a href="http://windows.microsoft.com/en-us/internet-explorer/products/ie/home">Internet Explorer 10</a>,
+        or a current version of
+        <a href="http://www.mozilla.org/en-US/firefox/new/">Firefox</a>,
+        <a href="http://www.google.com/chrome">Chrome</a>, or
+        <a href="http://www.apple.com/safari/">Safari</a>.</font></p>
+</canvas>
+</body>

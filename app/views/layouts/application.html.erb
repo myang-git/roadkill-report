@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>路殺紀錄</title>
+  <%= stylesheet_link_tag "application", media: "all", "data-turbolinks-track" => true %>
+  <%= stylesheet_link_tag "jqmtheme.min.css" %>
+  <%= stylesheet_link_tag "jquery.mobile.icons.min.css" %>
+  <%= stylesheet_link_tag "http://code.jquery.com/mobile/1.4.3/jquery.mobile.structure-1.4.3.min.css" %>
+  <%= stylesheet_link_tag "jtsage/jqm-datebox-1.4.2.css" %>
+  <%= stylesheet_link_tag "home" %>
+  <%= stylesheet_link_tag "stats" %>
+  
+  
+  <%= javascript_include_tag "application", "data-turbolinks-track" => true %>
+  <%= javascript_include_tag "https://maps.googleapis.com/maps/api/js?language=zh-TW" %>
+  <%= javascript_include_tag "https://www.google.com/jsapi" %>
+  <%= javascript_include_tag "blueimp/load-image.js"%>
+  <%= javascript_include_tag "blueimp/load-image-ios.js"%>
+  <%= javascript_include_tag "blueimp/load-image-meta.js"%>
+  <%= javascript_include_tag "blueimp/load-image-exif.js"%>
+  <%= javascript_include_tag "jtsage/jqm-datebox-1.4.2.core.js" %>
+  <%= javascript_include_tag "jtsage/jqm-datebox-1.4.2.mode.calbox.js" %>
+  <%= javascript_include_tag "jtsage/jqm-datebox-1.4.2.mode.datebox.js" %>
+  <%= javascript_include_tag "jtsage/jquery.mobile.datebox.i18n.zh-TW.utf8.js" %>
+  <%= javascript_include_tag "home" %>
+  <%= javascript_include_tag "stats" %>
+
+  <%= csrf_meta_tags %>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+<body>
+	
+<%= yield %>
+
+</body>
+</html>

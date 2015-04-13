@@ -15,5 +15,5 @@ $(document).on("pageshow", init);
 
 <div id="centerContainer" style="position: absolute; text-align:center; width: 100%; margin: 0 auto 0 auto;">
 	<h1>路殺紀錄</h1>
-	<a id="btnSignInFacebook" href="/auth/facebook" class="ui-btn ui-btn-inline ui-corner-all" style="margin: 0; background-color: #3f589a; color: #ffffff;"><%= image_tag "fblogo-white.png", :style => "vertical-align:middle;"%><span style="padding-left: 15px">Log in with Facebook</span></a>
+	<fb:login-button size="xlarge" scope="public_profile,email,publish_actions" onlogin="checkLoginState();"></fb:login-button>
 </div>

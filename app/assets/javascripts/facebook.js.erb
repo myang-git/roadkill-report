@@ -1,38 +1,46 @@
-(function() {
-  (function(d, s, id) {
-      var js, fjs = d.getElementsByTagName(s)[0];
-      if (d.getElementById(id)) return;
-      js = d.createElement(s); js.id = id;
-      js.src = "//connect.facebook.net/en_US/sdk.js";
-      fjs.parentNode.insertBefore(js, fjs);
-    }(document, 'script', 'facebook-jssdk'));
 
+function initFB() {
   window.fbAsyncInit = function() {
     FB.init({
       appId: '<%= ENV["FACEBOOK_APP_ID"] %>',
-      cookie: true,
+      cookie: true, 
+      xfbml: true,
       version: 'v2.2'
-    });
-
-    $(document).on("click", "#btnSignInFacebook", function(e) {
-      e.preventDefault();
-      return FB.login(function(response) {
-        if (response.authResponse) {
-  	  console.log(authResponse.grantedScopes);        
-          return window.location = '/auth/facebook/callback';
-        }
-      }, {scope: 'publish_actions', return_scopes: true});
-    });
-
-    return $(document).on("click", "#btnSignOutFacebook", function(e) {
-      FB.getLoginStatus(function(response) {
-        if (response.authResponse) {
-          return FB.logout();
-        }
-      });
-      return true;
     });
   };
 
-  var version = 5;
-}).call(this);
+  (function(d, s, id) {
+    var js, fjs = d.getElementsByTagName(s)[0];
+    if (d.getElementById(id)) return;
+    js = d.createElement(s); js.id = id;
+    js.src = "//connect.facebook.net/zh_TW/sdk.js";
+    fjs.parentNode.insertBefore(js, fjs);
+  }(document, 'script', 'facebook-jssdk'));  
+}
+
+function checkPermissions(uid) {
+  FB.api(
+      "/" + uid + "/permissions",
+      function (response) {
+        if (response && !response.error) {
+          console.log(response);
+        }
+      }
+  );  
+}
+
+function checkLoginState() {
+  FB.getLoginStatus(function(response) {
+    console.log(response);
+    if(response.status === 'connected') {
+      if(response.authResponse) {
+        checkPermissions(response.authResponse.userID);
+      }
+    }
+  });
+}
+
+(function() {
+  initFB();
+})()
+

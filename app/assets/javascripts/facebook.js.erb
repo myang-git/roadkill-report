@@ -1,4 +1,6 @@
 
+var FBPermission = {public_profile: false, email: false, publish_actions: false};
+
 function initFB() {
   window.fbAsyncInit = function() {
     FB.init({
@@ -18,12 +20,28 @@ function initFB() {
   }(document, 'script', 'facebook-jssdk'));  
 }
 
+function readFBPermissions(data) {
+  for (var i = 0; i < data.length; i++) {
+    item = data[i];
+    if (item.permission === 'public_profile') {
+      FBPermission.public_profile = item.status === 'granted';
+    }
+    if (item.permission === 'email') {
+      FBPermission.email = item.status === 'granted';
+    }
+    if (item.permission === 'publish_actions') {
+      FBPermission.publish_actions = item.status === 'granted';
+    }
+  }
+}
+
 function checkPermissions(uid) {
   FB.api(
       "/" + uid + "/permissions",
       function (response) {
         if (response && !response.error) {
-          console.log(response);
+          readFBPermissions(response.data);
+          window.location = '/auth/facebook/callback';
         }
       }
   );  
@@ -34,8 +52,12 @@ function checkLoginState() {
     console.log(response);
     if(response.status === 'connected') {
       if(response.authResponse) {
-        checkPermissions(response.authResponse.userID);
+        window.location = '/auth/facebook/callback';
+        //checkPermissions(response.authResponse.userID);
       }
+    }
+    else {
+      alert('Please ok');
     }
   });
 }

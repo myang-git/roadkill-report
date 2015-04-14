@@ -41,7 +41,7 @@ function checkPermissions(uid) {
       function (response) {
         if (response && !response.error) {
           readFBPermissions(response.data);
-          window.location = '/auth/facebook/callback';
+          window.location = '/auth/facebook/callback?signed_request=' + response.authResponse.signed_request;
         }
       }
   );  
@@ -52,7 +52,7 @@ function checkLoginState() {
     console.log(response);
     if(response.status === 'connected') {
       if(response.authResponse) {
-        window.location = '/auth/facebook/callback';
+        window.location = '/auth/facebook/callback?signed_request=' + response.authResponse.signedRequest;
         //checkPermissions(response.authResponse.userID);
       }
     }

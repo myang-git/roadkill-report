@@ -55,8 +55,8 @@ function checkLoginState() {
     if(response.status === 'connected') {
       if(response.authResponse) {
         //window.location = '/auth/facebook/callback?' + $.param({ signed_request: response.authResponse.signedRequest });
-        window.location = '/auth/facebook/callback';
-        //checkPermissions(response.authResponse.userID);
+        //window.location = '/auth/facebook/callback';
+        checkPermissions(response.authResponse.userID);
       }
     }
     else {

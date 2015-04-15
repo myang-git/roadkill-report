@@ -745,6 +745,7 @@ function btnTakePicturePressed(event, ui) {
 	return false;		
 }
 
+
 function upload(events, done, fail) {
 	var formData = new FormData();
 	formData.append("event_count", events.length);
@@ -815,38 +816,53 @@ function validateEvents(events) {
 
 function btnUploadPressed(event, ui) {
 	event.preventDefault();
-	
-	var validEventCount = rkreport.validEventCount();
-	if(validEventCount==0) {
-		alert(PHOTO_UNAVAILABLE);
-		return;
-	}
-	
-	var done = function(resp) {
-		if(resp.status==0) {
-			clearReport(rkreport);
-			hidePageBusy();
-			alert(UPLOAD_DONE);
+
+	var fbuid = FB.getUserID();
+	var accessToken = FB.getAuthResponse().accessToken;
+	checkPermissions(fbuid, function(permissions) {
+		if(!permissions.publish_actions) {
+			FB.login(function(response) {
+
+			}, {scope: 'publish_actions'})
 		}
 		else {
-			hidePageBusy();
-			alert(resp.message);
+			var validEventCount = rkreport.validEventCount();
+			if(validEventCount==0) {
+				alert(PHOTO_UNAVAILABLE);
+				return;
+			}
+			
+			var done = function(resp) {
+				if(resp.status==0) {
+					clearReport(rkreport);
+					hidePageBusy();
+					alert(UPLOAD_DONE);
+				}
+				else {
+					hidePageBusy();
+					alert(resp.message);
+				}
+			};
+			var fail = function(xhr, status) {
+				hidePageBusy();
+				alert(UPLOAD_FAILED);
+			};
+			
+			prepareReport(rkreport);
+			var events = rkreport.validEvents();
+			var error = validateEvents(events);
+			if(error!=null) {
+				alert(error.message);
+				return;
+			} 
+			showPageBusy(UPLOADING);
+			upload(events, done, fail);	
 		}
-	};
-	var fail = function(xhr, status) {
-		hidePageBusy();
-		alert(UPLOAD_FAILED);
-	};
+	});
+
+	return;
+
 	
-	prepareReport(rkreport);
-	var events = rkreport.validEvents();
-	var error = validateEvents(events);
-	if(error!=null) {
-		alert(error.message);
-		return;
-	} 
-	showPageBusy(UPLOADING);
-	upload(events, done, fail);	
 }
 
 function numberToString(number) {

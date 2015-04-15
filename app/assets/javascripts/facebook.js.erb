@@ -7,8 +7,10 @@ function initFB() {
       appId: '<%= ENV["FACEBOOK_APP_ID"] %>',
       cookie: true, 
       xfbml: true,
-      version: 'v2.2'
+      version: 'v2.2',
+      status: true
     });
+    console.log("called FB.init()");
   };
 
   (function(d, s, id) {
@@ -21,29 +23,31 @@ function initFB() {
 }
 
 function readFBPermissions(data) {
+  var permissions = {public_profile: false, email: false, publish_actions: false};
   for (var i = 0; i < data.length; i++) {
     item = data[i];
     if (item.permission === 'public_profile') {
-      FBPermission.public_profile = item.status === 'granted';
+      permissions.public_profile = item.status === 'granted';
     }
     if (item.permission === 'email') {
-      FBPermission.email = item.status === 'granted';
+      permissions.email = item.status === 'granted';
     }
     if (item.permission === 'publish_actions') {
-      FBPermission.publish_actions = item.status === 'granted';
+      permissions.publish_actions = item.status === 'granted';
     }
   }
+  return permissions;
 }
 
-function checkPermissions(uid) {
+function checkPermissions(uid, callback) {
   FB.api(
       "/" + uid + "/permissions",
       function (response) {
         if (response && !response.error) {
-          readFBPermissions(response.data);
-          //window.location = '/auth/facebook/callback?' + $.param({ signed_request: response.authResponse.signedRequest });
-          window.location = '/auth/facebook/callback';
-
+          permissions = readFBPermissions(response.data);
+          if (callback) {
+            callback(permissions);
+          }
         }
       }
   );  
@@ -54,9 +58,7 @@ function checkLoginState() {
     console.log(response);
     if(response.status === 'connected') {
       if(response.authResponse) {
-        //window.location = '/auth/facebook/callback?' + $.param({ signed_request: response.authResponse.signedRequest });
-        //window.location = '/auth/facebook/callback';
-        checkPermissions(response.authResponse.userID);
+        window.location = '/auth/facebook/callback';
       }
     }
     else {

@@ -39,7 +39,11 @@ function readFBPermissions(data) {
   return permissions;
 }
 
-function checkPermissions(uid, callback) {
+function loginFacebook(callback) {
+  FB.login(callback, {scope: 'public_profile,email,publish_actions'});
+}
+
+function checkFBPermissions(uid, callback) {
   FB.api(
       "/" + uid + "/permissions",
       function (response) {

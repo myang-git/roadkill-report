@@ -19,6 +19,7 @@ var PICK_DATE = "請選拍攝日期";
 var PROCESSING = "處理中...";
 var PARSE_GEOCODING_RESULT_FAILED = "無法解析地址資訊";
 var GEOCODING_SERVICE_ERROR = "地址查詢產生錯誤";
+var NO_PUBLISH_ACTIONS_PERMISSION = "尚未取得貼文授權，請重新登入並允許APP貼文"
 
 /* ui elements */
 var btnUpload;
@@ -814,55 +815,57 @@ function validateEvents(events) {
 	return null;
 }
 
+function canUpload() {
+	var validEventCount = rkreport.validEventCount();
+	if(validEventCount==0) {
+		alert(PHOTO_UNAVAILABLE);
+		return;
+	}
+
+	var done = function(resp) {
+		if(resp.status==0) {
+			clearReport(rkreport);
+			hidePageBusy();
+			alert(UPLOAD_DONE);
+		}
+		else {
+			hidePageBusy();
+			alert(resp.message);
+		}
+	};
+	var fail = function(xhr, status) {
+		hidePageBusy();
+		alert(UPLOAD_FAILED);
+	};
+
+	prepareReport(rkreport);
+	var events = rkreport.validEvents();
+	var error = validateEvents(events);
+	if(error!=null) {
+		alert(error.message);
+		return;
+	} 
+	showPageBusy(UPLOADING);
+	upload(events, done, fail);	
+}
+
+function cannotUpload() {
+	alert(NO_PUBLISH_ACTIONS_PERMISSION);
+}
+
 function btnUploadPressed(event, ui) {
 	event.preventDefault();
 
 	var fbuid = FB.getUserID();
-	var accessToken = FB.getAuthResponse().accessToken;
-	checkPermissions(fbuid, function(permissions) {
-		if(!permissions.publish_actions) {
-			FB.login(function(response) {
-
-			}, {scope: 'publish_actions'})
+	checkFBPermissions(fbuid, function(permissions) {
+		if(permissions.publish_actions) {
+			canUpload();			
 		}
 		else {
-			var validEventCount = rkreport.validEventCount();
-			if(validEventCount==0) {
-				alert(PHOTO_UNAVAILABLE);
-				return;
-			}
-			
-			var done = function(resp) {
-				if(resp.status==0) {
-					clearReport(rkreport);
-					hidePageBusy();
-					alert(UPLOAD_DONE);
-				}
-				else {
-					hidePageBusy();
-					alert(resp.message);
-				}
-			};
-			var fail = function(xhr, status) {
-				hidePageBusy();
-				alert(UPLOAD_FAILED);
-			};
-			
-			prepareReport(rkreport);
-			var events = rkreport.validEvents();
-			var error = validateEvents(events);
-			if(error!=null) {
-				alert(error.message);
-				return;
-			} 
-			showPageBusy(UPLOADING);
-			upload(events, done, fail);	
+			cannotUpload();
 		}
 	});
 
-	return;
-
-	
 }
 
 function numberToString(number) {
@@ -890,24 +893,13 @@ function currentTimestampString(time) {
 	return timestampString; 
 }
 
-function initUI() {
-	if(uiReady) {
-		return;
-	}
+function withPublishActionsPermission() {
+	$('#photoList').css("display", "");
+	$('#homeToolbar').css("display", "");
 	btnUpload = $("#btnUpload");
 	btnUpload.on("click", btnUploadPressed);
-	/*
-	var btnTopReporters = $("#btnTopReporters");
-	btnTopReporters.on("click", function() {
-		var options = {
-			transition: 'slide'
-		};
-		$.mobile.pageContainer.pagecontainer("change", "/stats", options);
-	});
-	*/
 	photoPicker = $('#photoPicker');
-	editPopup = $("#editPopup");	
-	$('#bottomContainer').bottom();
+	editPopup = $("#editPopup");
 	var elements = $("[id=eventRow]");
 	for(var row=0; row<elements.length; row++) {
 		var element = elements[row];
@@ -919,6 +911,26 @@ function initUI() {
 	mapView = new MapView();
 	uiReady = true;
 }
+
+function withoutPublishActionPermission() {
+	$('#bottomContainer').setToProperWidth();
+	$('#bottomContainer').center();
+}
+
+function initUI() {
+	if(uiReady) {
+		return;
+	}
+
+	checkFBPermissions(function(permissions) {
+		if(permissions.publish_actions) {
+			withPublishActionsPermission();
+		}
+		else {
+			withoutPublishActionPermission();
+		}
+	});
+}
  
 function initModels() {
 	if(rkreport!=null) {
@@ -926,6 +938,7 @@ function initModels() {
 	}
 	rkreport = new RkReport();
 }
+
 
 function initGmap(event, ui) {
 	if(mapView.map!=null) {
@@ -942,6 +955,7 @@ function initGmap(event, ui) {
 }
 
 function init(event, ui) {
+	initFB();
 	console.log("init()");
 	initModels();
 	initUI();

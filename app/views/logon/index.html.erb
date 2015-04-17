@@ -4,8 +4,20 @@
 var WHEIGHT = $(window).height();
 var WWIDTH = $(window).width();
 
+var fbConnected = function() {
+	window.location = '/auth/facebook/callback';
+};
+
+var fbNotConnected = function() {
+	$("#centerContainer").center();  
+};
+
 function init(event, ui) {
-  $("#centerContainer").center();
+	initFB(fbConnected, fbNotConnected);
+}
+
+function onFBLogin() {
+	checkFBLoginState(fbConnected, fbNotConnected);
 }
 
 $(document).on("pageshow", init);
@@ -15,5 +27,5 @@ $(document).on("pageshow", init);
 
 <div id="centerContainer" style="position: absolute; text-align:center; width: 100%; margin: 0 auto 0 auto;">
 	<h1>路殺紀錄</h1>
-	<fb:login-button size="xlarge" scope="public_profile,email,publish_actions" onlogin="checkLoginState();"></fb:login-button>
+	<fb:login-button size="xlarge" scope="public_profile,email,publish_actions" onlogin="onFBLogin();"></fb:login-button>
 </div>

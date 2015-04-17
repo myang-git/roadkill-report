@@ -24,13 +24,19 @@ jQuery.fn.center = function () {
 };
 
 jQuery.fn.setToProperWidth = function() {
-	var width = $(window).width() * 0.8;
+	var width = $(window).width() * 0.65;
 	$(this).css("width", width);
 };
 
 jQuery.fn.vcenter = function () {
 	this.css("position","absolute");
 	this.css("top", Math.max(0, (($(window).height() - $(this).outerHeight()) / 2.0) + $(window).scrollTop() * 0) + "px");
+ 	return this;
+};
+
+jQuery.fn.hcenter = function () {
+	this.css("position","absolute");
+ 	this.css("left", Math.max(0, (($(window).width() - $(this).outerWidth()) / 2.0)) + "px");
  	return this;
 };
 

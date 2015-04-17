@@ -1,27 +1,3 @@
-
-var FBPermission = {public_profile: false, email: false, publish_actions: false};
-
-function initFB() {
-  window.fbAsyncInit = function() {
-    FB.init({
-      appId: '<%= ENV["FACEBOOK_APP_ID"] %>',
-      cookie: true, 
-      xfbml: true,
-      version: 'v2.2',
-      status: true
-    });
-    console.log("called FB.init()");
-  };
-
-  (function(d, s, id) {
-    var js, fjs = d.getElementsByTagName(s)[0];
-    if (d.getElementById(id)) return;
-    js = d.createElement(s); js.id = id;
-    js.src = "//connect.facebook.net/zh_TW/sdk.js";
-    fjs.parentNode.insertBefore(js, fjs);
-  }(document, 'script', 'facebook-jssdk'));  
-}
-
 function readFBPermissions(data) {
   var permissions = {public_profile: false, email: false, publish_actions: false};
   for (var i = 0; i < data.length; i++) {
@@ -39,9 +15,6 @@ function readFBPermissions(data) {
   return permissions;
 }
 
-function loginFacebook(callback) {
-  FB.login(callback, {scope: 'public_profile,email,publish_actions'});
-}
 
 function checkFBPermissions(uid, callback) {
   FB.api(
@@ -57,21 +30,36 @@ function checkFBPermissions(uid, callback) {
   );  
 }
 
-function checkLoginState() {
+
+function checkFBLoginState(fbConnected, fbNotConnected) {
   FB.getLoginStatus(function(response) {
     console.log(response);
     if(response.status === 'connected') {
       if(response.authResponse) {
-        window.location = '/auth/facebook/callback';
+        if(fbConnected) {
+          fbConnected();
+        }
       }
     }
     else {
-      alert('Please ok');
+      if(fbNotConnected) {
+        fbNotConnected();
+      }
     }
   });
 }
 
-(function() {
-  initFB();
-})()
-
+function initFB(fbConnected, fbNotConnected) {
+  $.ajaxSetup({ cache: true });
+  $.getScript('//connect.facebook.net/en_US/sdk.js', function(){
+    FB.init({
+      appId: '<%= ENV["FACEBOOK_APP_ID"] %>',
+      version: 'v2.3',
+      cookie: true, 
+      xfbml: true,
+      status: true
+    });     
+    $('#loginbutton,#feedbutton').removeAttr('disabled');
+    checkFBLoginState(fbConnected, fbNotConnected);
+  });  
+}

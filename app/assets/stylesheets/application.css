@@ -22,6 +22,10 @@
 	font-size: 11px;
 }
 
+.med-font {
+	font-size: 16px;
+}
+
 .large-font {
 	font-size: 20px !important;
 }
@@ -72,6 +76,12 @@ img.vcenter {
   border-radius: 15px !important;
 }
 
+.angle-corner {
+  -moz-border-radius: 0px !important;
+  -webkit-border-radius: 0px !important;
+  border-radius: 0px !important;
+}
+
 .pastel-green {
   background: #00bbbd !important;
 }
@@ -116,4 +126,9 @@ img.vcenter {
 
 .hidden {
 	display: none;
+}
+
+.button-center {
+	margin-left: 15% !important;
+	margin-right: 15% !important;
 }

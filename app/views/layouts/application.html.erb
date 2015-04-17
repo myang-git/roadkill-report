@@ -12,6 +12,8 @@
   
   
   <%= javascript_include_tag "application", "data-turbolinks-track" => true %>
+  <%= stylesheet_link_tag "application", params[:controller], :media => "all" %>
+  <%= javascript_include_tag "application", params[:controller] %>
   <%= javascript_include_tag "https://maps.googleapis.com/maps/api/js?language=zh-TW" %>
   <%= javascript_include_tag "https://www.google.com/jsapi" %>
   <%= javascript_include_tag "blueimp/load-image.js"%>
@@ -22,8 +24,6 @@
   <%= javascript_include_tag "jtsage/jqm-datebox-1.4.2.mode.calbox.js" %>
   <%= javascript_include_tag "jtsage/jqm-datebox-1.4.2.mode.datebox.js" %>
   <%= javascript_include_tag "jtsage/jquery.mobile.datebox.i18n.zh-TW.utf8.js" %>
-  <%= javascript_include_tag "home" %>
-  <%= javascript_include_tag "stats" %>
 
   <%= csrf_meta_tags %>
   <meta name="viewport" content="width=device-width, initial-scale=1">

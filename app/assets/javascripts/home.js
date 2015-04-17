@@ -894,9 +894,9 @@ function currentTimestampString(time) {
 }
 
 function withPublishActionsPermission() {
-	$('#photoList').css("display", "");
-	$('#homeToolbar').css("display", "");
-	btnUpload = $("#btnUpload");
+	$('#photoList').show();
+	$('#homeToolbar').show();
+	btnUpload = $("#btnUpload");;
 	btnUpload.on("click", btnUploadPressed);
 	photoPicker = $('#photoPicker');
 	editPopup = $("#editPopup");
@@ -913,16 +913,25 @@ function withPublishActionsPermission() {
 }
 
 function withoutPublishActionPermission() {
-	$('#bottomContainer').setToProperWidth();
+	$('#lblNoPublishAction').show();
+	$('#btnTopReporters').setToProperWidth();
+	$('#btnLogout').setToProperWidth();
 	$('#bottomContainer').center();
+	uiReady = true;
 }
 
 function initUI() {
 	if(uiReady) {
 		return;
 	}
-
-	checkFBPermissions(function(permissions) {
+	$('#btnLogout').on('click', function() {
+		FB.logout(function(response) {
+			console.log('logged out');
+			window.location = '/signout';
+		});
+	});
+	var fbuid = FB.getUserID();
+	checkFBPermissions(fbuid, function(permissions) {
 		if(permissions.publish_actions) {
 			withPublishActionsPermission();
 		}
@@ -955,10 +964,17 @@ function initGmap(event, ui) {
 }
 
 function init(event, ui) {
-	initFB();
-	console.log("init()");
-	initModels();
-	initUI();
+	var fbConnected = function() {
+		console.log("init() - fbConnected");
+		initModels();
+		initUI();
+	};
+
+	var fbNotConnected = function() {
+		console.log("init() - fbNotConnected");
+	};
+
+	initFB(fbConnected, fbNotConnected);
 }
 
 $(document).on("pagecreate", "#home", init);

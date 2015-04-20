@@ -1,6 +1,6 @@
 <div id="home" data-role="page">
 	<div data-role="main" class="ui-content" data-theme="a" style="margin-top: 5px;">
-		<ul id="photoList" data-role="listview" data-split-theme="a" data-inset="true" class="no-shadow" style="display: none;">
+		<ul id="photoList" data-role="listview" data-split-theme="a" data-inset="true" class="no-shadow">
 			<li id="eventRow" data-icon="edit">
 				<a href="#" data-rel="popup" data-position-to="window" data-transition="fade" class="no-border">
 					<%= image_tag "camera.png", :id => "photo", :class => "minor-padding vcenter photo", :alt => "照片" %>
@@ -37,14 +37,13 @@
 		</ul>	
 	</div>
 
-	<div id="bottomContainer">
-		<p id="lblNoPublishAction" class="text-center med-font" style="display: none;">目前無法上傳，請重新登入並授予此App在Facebook貼文的權限</p>
+	<div id="bottomContainer" style="margin-top: 800px">
 		<a id="btnTopReporters" href="/stats" class="ui-btn ui-btn-a white-font pastel-green button-center">即時統計</a>
 		<a id="btnLogout" href="#" class="ui-btn ui-btn-a white-font pastel-green button-center">登出</a>
 		<p class="text-center small-font">v20150417.1</p>
 	</div>
 	
-	<div id="homeToolbar" data-role="footer" data-position="fixed" data-tap-toggle="false" style="display: none; padding: 5px 0 5px 0">
+	<div id="homeToolbar" data-role="footer" data-position="fixed" data-tap-toggle="false" style="padding: 5px 0 5px 0">
 		<div class="text-center">
 			<a id="btnUpload" href="#" class="ui-btn ui-btn-a ui-btn-inline pastel-green white-font large-font" style="padding: 20px 50px 20px 50px; margin-right: auto; margin-left: auto;">上傳</a>
 		</div>

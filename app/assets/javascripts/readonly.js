@@ -1,6 +1,12 @@
 function initUI() {
 //	$('#btnTopReporters').setToProperWidth();
 //	$('#btnLogout').setToProperWidth();
+	$('#btnLogout').on('click', function() {
+		FB.logout(function(response) {
+			console.log('logged out');
+			window.location = '/signout';
+		});
+	});
 	$('#mainContainer').vcenter();
 }
 

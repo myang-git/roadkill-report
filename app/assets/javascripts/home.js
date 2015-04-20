@@ -893,7 +893,16 @@ function currentTimestampString(time) {
 	return timestampString; 
 }
 
-function withPublishActionsPermission() {
+function initUI() {
+	if(uiReady) {
+		return;
+	}
+	$('#btnLogout').on('click', function() {
+		FB.logout(function(response) {
+			console.log('logged out');
+			window.location = '/signout';
+		});
+	});
 	$('#photoList').show();
 	$('#homeToolbar').show();
 	btnUpload = $("#btnUpload");;
@@ -910,35 +919,7 @@ function withPublishActionsPermission() {
 	
 	mapView = new MapView();
 	uiReady = true;
-}
 
-function withoutPublishActionPermission() {
-	$('#lblNoPublishAction').show();
-	$('#btnTopReporters').setToProperWidth();
-	$('#btnLogout').setToProperWidth();
-	$('#bottomContainer').vcenter();
-	uiReady = true;
-}
-
-function initUI() {
-	if(uiReady) {
-		return;
-	}
-	$('#btnLogout').on('click', function() {
-		FB.logout(function(response) {
-			console.log('logged out');
-			window.location = '/signout';
-		});
-	});
-	var fbuid = FB.getUserID();
-	checkFBPermissions(fbuid, function(permissions) {
-		if(permissions.publish_actions) {
-			withPublishActionsPermission();
-		}
-		else {
-			withoutPublishActionPermission();
-		}
-	});
 }
  
 function initModels() {
@@ -972,6 +953,7 @@ function init(event, ui) {
 
 	var fbNotConnected = function() {
 		console.log("init() - fbNotConnected");
+		windows.location = '/logon'
 	};
 
 	initFB(fbConnected, fbNotConnected);

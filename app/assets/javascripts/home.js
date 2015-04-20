@@ -19,7 +19,7 @@ var PICK_DATE = "請選拍攝日期";
 var PROCESSING = "處理中...";
 var PARSE_GEOCODING_RESULT_FAILED = "無法解析地址資訊";
 var GEOCODING_SERVICE_ERROR = "地址查詢產生錯誤";
-var NO_PUBLISH_ACTIONS_PERMISSION = "尚未取得貼文授權，請重新登入並允許APP貼文"
+var NO_PUBLISH_ACTIONS_PERMISSION = "尚未取得貼文授權，請重新登入並允許APP貼文至Facebook"
 
 /* ui elements */
 var btnUpload;
@@ -916,7 +916,7 @@ function withoutPublishActionPermission() {
 	$('#lblNoPublishAction').show();
 	$('#btnTopReporters').setToProperWidth();
 	$('#btnLogout').setToProperWidth();
-	$('#bottomContainer').center();
+	$('#bottomContainer').vcenter();
 	uiReady = true;
 }
 

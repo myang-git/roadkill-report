@@ -51,7 +51,7 @@ function checkFBLoginState(fbConnected, fbNotConnected) {
 
 function initFB(fbConnected, fbNotConnected) {
   $.ajaxSetup({ cache: true });
-  $.getScript('//connect.facebook.net/en_US/sdk.js', function(){
+  $.getScript('//connect.facebook.net/zh_TW/sdk.js', function(){
     FB.init({
       appId: '<%= ENV["FACEBOOK_APP_ID"] %>',
       version: 'v2.3',

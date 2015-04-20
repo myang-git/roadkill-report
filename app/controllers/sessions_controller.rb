@@ -23,7 +23,9 @@ class SessionsController < ApplicationController
 		user = User.from_omniauth(env["omniauth.auth"])
 		session[:user_id] = user.id
 
-		if can_publish_actions? user
+		fbPermissions = user.get_fb_permissions()
+
+		if fbPermissions['publish_actions']
 			redirect_to root_url
 		else
 			redirect_to url_for "/readonly"

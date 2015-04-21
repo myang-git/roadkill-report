@@ -23,7 +23,15 @@ class ApplicationController < ActionController::Base
 		logged_in = logged_in_user_exists && session_valid  
 		logged_in
 	end
-	
-	helper_method :current_user, :is_logged_in?
+
+	def can_publish?
+		if current_user == nil
+			return false
+		end
+		fbPermissions = current_user.get_fb_permissions()
+		return fbPermissions['publish_actions']
+	end
+
+	helper_method :current_user, :is_logged_in?, :can_publish?
 
 end

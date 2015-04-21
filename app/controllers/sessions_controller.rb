@@ -2,22 +2,6 @@ require 'json'
 require 'time'
 
 class SessionsController < ApplicationController
-	def can_publish_actions?(user)
-		access_token = user.oauth_token
-		graph = Koala::Facebook::API.new(access_token)
-		permissions = graph.get_connections('me', 'permissions')
-		canPublishActions = false
-		for permission in permissions
-			puts 'permission: ' + permission.to_s
-			if permission['permission']=='publish_actions'
-				if permission['status']=='granted'
-					canPublishActions = true
-					break
-				end
-			end
-		end
-		return canPublishActions
-	end
 
 	def create
 		user = User.from_omniauth(env["omniauth.auth"])
@@ -28,7 +12,7 @@ class SessionsController < ApplicationController
 		if fbPermissions['publish_actions']
 			redirect_to root_url
 		else
-			redirect_to url_for "/readonly"
+			redirect_to url_for "/guest"
 		end
 	end
 	

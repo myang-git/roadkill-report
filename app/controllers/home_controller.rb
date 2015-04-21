@@ -4,5 +4,9 @@ class HomeController < ApplicationController
 			redirect_to url_for "/logon"
 			return
 		end
+		
+		if !can_publish?
+			redirect_to url_for "/guest"
+		end
 	end
 end

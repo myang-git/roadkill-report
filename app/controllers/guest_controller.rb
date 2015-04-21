@@ -1,4 +1,4 @@
-class ReadonlyController < ApplicationController
+class GuestController < ApplicationController
 	def index
 		if !is_logged_in?
 			redirect_to url_for "/logon"

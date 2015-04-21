@@ -28,9 +28,11 @@ class FacebookUploader
 		graph = Koala::Facebook::API.new(access_token)
 
 		groupId = ENV["FACEBOOK_GROUP_ID"]
+		puts 'facebook group id: ' + groupId
 		begin
 			graph.put_picture(photofile, {message: message}, groupId)
 		rescue Koala::Facebook::ServerError => e
+			puts e.to_s
 			if e.fb_error_code == 200 && e.fb_error_subcode == 1376025
 				raise ReportException.new(901, "請先加入社團")
 			end

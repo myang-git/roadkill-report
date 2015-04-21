@@ -30,7 +30,8 @@ class FacebookUploader
 		groupId = ENV["FACEBOOK_GROUP_ID"]
 		puts 'facebook group id: ' + groupId
 		begin
-			graph.put_picture(photofile, {message: message}, groupId)
+			response = graph.put_picture(photofile, {message: message}, groupId)
+			puts "facebook response: " + response.to_s
 		rescue Koala::Facebook::ServerError => e
 			puts e.to_s
 			if e.fb_error_code == 200 && e.fb_error_subcode == 1376025

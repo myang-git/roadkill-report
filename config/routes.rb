@@ -13,7 +13,7 @@ Testjquerymobile::Application.routes.draw do
   get '/topreporters/:id', to: 'top_reporters#show'
   get '/stats', to:'stats#index'
 
-  scope :api do
+  scope :api, :defaults => {:format => :json}, :constraints => {:format => /(json)/} do
     scope :v1 do 
       scope '/stats' do
         scope '/submissions' do

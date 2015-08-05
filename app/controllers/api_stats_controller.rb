@@ -4,7 +4,7 @@ class ApiStatsController < ApplicationController
     min = params[:min]
     max = params[:max]
     stats = []
-    results = ActiveRecord::Base.connection.execute('select * from qry_reporter_submissions where submissions >= %d and submissions < %d order by submissions desc' % [min.to_i, max.to_i])
+    results = ActiveRecord::Base.connection.execute('select * from qry_reporter_submissions where submissions >= %d and submissions <= %d order by submissions desc' % [min.to_i, max.to_i])
     results.each do |row|
       reporter_fbname = row['reporter_fbname']
       submissions = row['submissions'].to_i
